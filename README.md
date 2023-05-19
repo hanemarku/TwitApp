@@ -1,5 +1,5 @@
 # TwitApp
-Projekt Programim Mobile  -> 
+Projekt ne lenden Programim Mobile  -> 
 Ky projekt eshte një aplikacion mobile i quajtur "TwitApp" që ofron një 
 platformë për komunikim dhe shpërndarje të mesazheve në stilin e Twitter-it. 
 Aplikacioni ka funksionet e një platforme sociale, duke përfshirë krijimin 
