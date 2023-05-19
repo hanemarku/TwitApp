@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "456581793774",
+    "project_id": "twitapp-9470d",
+    "storage_bucket": "twitapp-9470d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:456581793774:android:41d071c089ad2fddc630ff",
+        "android_client_info": {
+          "package_name": "com.example.twitapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "456581793774-nk3dief6b4n3o41f7rmf4o9m1i33d70f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyByyr_2zMzQ9u3ymewet9dgTqf9pGSqOrQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "456581793774-nk3dief6b4n3o41f7rmf4o9m1i33d70f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
