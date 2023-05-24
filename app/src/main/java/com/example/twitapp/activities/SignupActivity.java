@@ -33,14 +33,12 @@ import java.util.ArrayList;
 public class SignupActivity extends AppCompatActivity {
     private EditText emailET;
     private TextInputLayout emailTIL;
-
     private EditText usernameET;
     private TextInputLayout usernameTIL;
     private EditText passwordET;
     private TextInputLayout passwordTIL;
     private View signupProgressLayout;
     private FirebaseAuth firebaseAuth;
-
     private FirebaseFirestore firebaseDatabase;
 
 
