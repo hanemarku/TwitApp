@@ -1,4 +1,4 @@
-package com.example.twitapp.util;
+package com.example.twitapp.util.models;
 
 import java.util.ArrayList;
 

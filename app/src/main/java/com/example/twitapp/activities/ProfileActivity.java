@@ -28,10 +28,9 @@ import android.widget.Toast;
 
 import com.example.twitapp.R;
 import com.example.twitapp.util.Constants;
-import com.example.twitapp.util.User;
+import com.example.twitapp.util.models.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -112,28 +111,6 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
 
-//        profileProgressLayout.setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return true;
-//            }
-//        });
-
-//        photoIV.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(Intent.ACTION_PICK);
-//                intent.setType("image/*");
-//                startActivityForResult(intent, REQUEST_CODE_PHOTO);
-//            }
-//        });
-
-//        photoIV.setOnClickListener(v -> {
-//            Intent intent = new Intent(Intent.ACTION_PICK);
-//            intent.setType("image/*");
-//            launcher.launch(intent);
-//
-//        });
         findViewById(R.id.photoIV).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

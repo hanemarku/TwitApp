@@ -9,30 +9,23 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.example.twitapp.R;
 import com.example.twitapp.databinding.ActivityHomeBinding;
-import com.example.twitapp.fragments.HomeFragment;
 import com.example.twitapp.fragments.HomePageFragment;
 import com.example.twitapp.fragments.MyActivityFragment;
 import com.example.twitapp.fragments.SearchFragment;
 import com.example.twitapp.util.ImageUtil;
-import com.example.twitapp.util.User;
-import com.google.android.material.tabs.TabLayout;
+import com.example.twitapp.util.models.User;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager2.widget.ViewPager2;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -41,15 +34,10 @@ public class HomeActivity extends AppCompatActivity {
     private LinearLayout homeProgressLayout;
     private String userId;
     private FirebaseAuth auth;
-
-
-//    private FirebaseAuth auth;
-//    private Button button;
-//    private TextView textView;
-//    private FirebaseUser user;
-
     ActivityHomeBinding binding;
-
+    private FloatingActionButton fab;
+    private User user;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +48,8 @@ public class HomeActivity extends AppCompatActivity {
         userId = auth.getCurrentUser().getUid();
 
         homeProgressLayout = findViewById(R.id.homeProgressLayout);
+        fab = findViewById(R.id.fab);
+        Log.i("fab", String.valueOf(fab));
 
         logo = findViewById(R.id.logo);
 
@@ -85,8 +75,6 @@ public class HomeActivity extends AppCompatActivity {
             return true;
         });
 
-
-
         binding.logo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,6 +82,24 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("user", String.valueOf(user));
+                if (user != null) {
+                    Log.i("useri", String.valueOf(user));
+                    String username = user.getUsername();
+                    Log.i("username", username);
+                    if (username != null) {
+                        startActivity(TweetActivity.newIntent(HomeActivity.this, userId, user.getUsername()));
+                    }
+                }
+            }
+        });
+
+        binding.homeProgressLayout.setOnTouchListener((v, event) -> true);
 
 
 //        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -138,7 +144,7 @@ public class HomeActivity extends AppCompatActivity {
         firebaseDB.collection(DATA_USERS).document(userId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     homeProgressLayout.setVisibility(View.GONE);
-                    User user = documentSnapshot.toObject(User.class);
+                    user = documentSnapshot.toObject(User.class);
                     if (user != null && user.getImageUrl() != null) {
                         ImageUtil.loadUrl(logo, user.getImageUrl(), R.drawable.logo);
                     }
@@ -151,5 +157,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
+    public void setUserData(String userId, String userName) {
+        this.userId = userId;
+        this.userName = userName;
+    }
 
 }
