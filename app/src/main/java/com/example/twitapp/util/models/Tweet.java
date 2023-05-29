@@ -16,6 +16,12 @@ public class Tweet {
     public Tweet() {
     }
 
+    public Tweet(String tweetId, String username, String text){
+        this.tweetId = tweetId;
+        this.username = username;
+        this.text = text;
+    }
+
     public Tweet(String tweetId, ArrayList<String> userIds, String username, String text, String imageUrl, Long timestamp, ArrayList<String> hashtags, ArrayList<String> likes) {
         this.tweetId = tweetId;
         this.userIds = userIds;
@@ -36,6 +42,8 @@ public class Tweet {
         this.imageUrl = imageUrl;
         this.timestamp = time;
     }
+
+
 
     public String getTweetId() {
         return tweetId;

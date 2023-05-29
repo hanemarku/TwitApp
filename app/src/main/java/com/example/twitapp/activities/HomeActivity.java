@@ -8,9 +8,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.twitapp.R;
 import com.example.twitapp.databinding.ActivityHomeBinding;
@@ -23,6 +27,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -38,6 +43,9 @@ public class HomeActivity extends AppCompatActivity {
     private FloatingActionButton fab;
     private User user;
     private String userName;
+    private EditText search;
+    private CardView searchBar;
+    private TextView titleBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +60,7 @@ public class HomeActivity extends AppCompatActivity {
         Log.i("fab", String.valueOf(fab));
 
         logo = findViewById(R.id.logo);
+        titleBar = findViewById(R.id.titleBar);
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -98,6 +107,24 @@ public class HomeActivity extends AppCompatActivity {
                 }
             }
         });
+
+
+        search = findViewById(R.id.search);
+        binding.search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    SearchFragment searchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout);
+                    if (searchFragment != null) {
+                        searchFragment.updateList(v.getText().toString());
+//                        searchFragment.populateTweetList("query");
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+
 
         binding.homeProgressLayout.setOnTouchListener((v, event) -> true);
 
@@ -155,6 +182,21 @@ public class HomeActivity extends AppCompatActivity {
                     finish();
                 });
     }
+
+//    private void performSearch(String query) {
+//        // Create a new instance of SearchFragment if it's not already initialized
+//        if (searchFragment == null) {
+//            searchFragment = new SearchFragment();
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.fragment_container, searchFragment)
+//                    .commit();
+//        }
+//
+//        // Call the populateTweetList() method of SearchFragment with the search query
+//        if (searchFragment != null) {
+//            searchFragment.populateTweetList(query);
+//        }
+//    }
 
 
     public void setUserData(String userId, String userName) {

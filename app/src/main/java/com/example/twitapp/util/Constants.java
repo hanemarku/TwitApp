@@ -12,7 +12,7 @@ public class Constants {
 
     public static final String DATA_IMAGES = "ProfileImages";
 
-    public static final String DATA_TWEETS = "Tweets";
+    public static final String DATA_TWEETS = "tweets";
     public static final String DATA_TWEET_USER_IDS = "userIds";
     public static final String DATA_TWEET_HASHTAGS = "hashtags";
     public static final String DATA_TWEETS_LIKES = "likes";
