@@ -107,38 +107,36 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                 if (listener != null) {
                     listener.onLayoutClick(tweet);
                 }
+
             });
 
             like.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onLike(tweet);
+                    if (tweet.getLikes().contains(userId)) {
+                        like.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.like));
+                    } else {
+                        like.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.like_inactive));
+                    }
+                    likeCount.setText(String.valueOf(tweet.getLikes().size()));
                 }
             });
 
             retweet.setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onRetweet(tweet);
+
+                    if (tweet.getUserIds().get(0).equals(userId)) {
+                        retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.original));
+                        retweet.setClickable(false);
+                    } else if (tweet.getUserIds().contains(userId)) {
+                        retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.retweet));
+                    } else {
+                        retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.retweet_inactive));
+                    }
+                    retweetCount.setText(String.valueOf(tweet.getUserIds().size() - 1));
                 }
             });
-
-
-////            boolean isLiked = new Random().nextBoolean();
-//            like.setImageDrawable(ContextCompat.getDrawable(context, isLiked ? R.drawable.like : R.drawable.like_inactive));
-
-            if (tweet.getLikes().contains(userId)) {
-                like.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.like));
-            } else {
-                like.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.like_inactive));
-            }
-
-            if (tweet.getUserIds().get(0).equals(userId)) {
-                retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.original));
-                retweet.setClickable(false);
-            } else if (tweet.getUserIds().contains(userId)) {
-                retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.retweet));
-            } else {
-                retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.retweet_inactive));
-            }
         }
     }
 }

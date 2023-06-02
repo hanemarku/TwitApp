@@ -2,6 +2,8 @@ package com.example.twitapp.fragments;
 
 import static com.example.twitapp.util.Constants.DATA_TWEETS;
 import static com.example.twitapp.util.Constants.DATA_TWEET_HASHTAGS;
+import static com.example.twitapp.util.Constants.DATA_USERS;
+import static com.example.twitapp.util.Constants.DATA_USER_HASHTAGS;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -110,6 +112,29 @@ public class SearchFragment extends Fragment {
             swipeRefresh.setRefreshing(false);
             updateList();
         });
+
+        view.findViewById(R.id.followHashtag).setOnClickListener(v -> {
+            v.setClickable(false);
+            List<String> followed = currentUser.getFollowHashtags();
+            if (hashtagFollowed) {
+                followed.remove(currentHashtag);
+            } else {
+                followed.add(currentHashtag);
+            }
+            firebaseDB.collection(DATA_USERS).document(userId)
+                    .update(DATA_USER_HASHTAGS, followed)
+                    .addOnSuccessListener(aVoid -> {
+                        if (callback != null) {
+                            callback.onUserUpdated();
+                        }
+                        v.setClickable(true);
+                        updateFollowDrawable();
+                    })
+                    .addOnFailureListener(e -> {
+                        e.printStackTrace();
+                        v.setClickable(true);
+                    });
+        });
     }
 
     public void newHashtag(String term) {
@@ -190,7 +215,7 @@ public class SearchFragment extends Fragment {
 
 
     private void updateFollowDrawable() {
-        hashtagFollowed = currentUser != null && currentUser.getFollowHashtags().contains(currentHashtag);
+        hashtagFollowed = currentUser != null && currentUser.getFollowHashtags() != null && currentUser.getFollowHashtags().contains(currentHashtag);
         Context context = getContext();
         if (context != null) {
             if (hashtagFollowed) {
@@ -201,4 +226,10 @@ public class SearchFragment extends Fragment {
         }
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateList();
+    }
 }

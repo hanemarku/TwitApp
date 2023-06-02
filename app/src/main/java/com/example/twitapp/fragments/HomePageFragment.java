@@ -187,12 +187,19 @@ public class HomePageFragment extends Fragment {
         }
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        updateList();
+//    public void setUser(User user) {
+//        this.currentUser = user;
+//        if (listener != null) {
+//            listener.setUser(user);
+//        }
 //    }
-//
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateList();
+    }
+
 //    public void updateList() {
 //
 //    }

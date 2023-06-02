@@ -47,6 +47,10 @@ public class HomeActivity extends AppCompatActivity implements HomeCallback {
     private EditText search;
     private CardView searchBar;
     private TextView titleBar;
+    private HomePageFragment homeFragment;
+    private SearchFragment searchFragment;
+    private MyActivityFragment myActivityFragment;
+    private Fragment currentFragment;
 
 
     @Override
@@ -70,6 +74,12 @@ public class HomeActivity extends AppCompatActivity implements HomeCallback {
         setContentView(binding.getRoot());
 
         replaceFragment(new SearchFragment());
+
+
+        homeFragment = new HomePageFragment();
+        searchFragment = new SearchFragment();
+        myActivityFragment = new MyActivityFragment();
+//        currentFragment = searchFragment;
 
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
 
@@ -178,7 +188,7 @@ public class HomeActivity extends AppCompatActivity implements HomeCallback {
                     if (user != null && user.getImageUrl() != null) {
                         ImageUtil.loadUrl(logo, user.getImageUrl(), R.drawable.logo);
                     }
-//                    updateFragmentUser();
+                    updateFragmentUser();
                 })
                 .addOnFailureListener(e -> {
                     e.printStackTrace();
@@ -201,6 +211,20 @@ public class HomeActivity extends AppCompatActivity implements HomeCallback {
 //        }
 //    }
 
+    public void updateFragmentUser() {
+//        homeFragment.setUser(user);
+//        searchFragment.setUser(user);
+//        myActivityFragment.setUser(user);
+        if (currentFragment instanceof SearchFragment) {
+            ((SearchFragment) currentFragment).updateList();
+        } else if (currentFragment instanceof HomePageFragment) {
+            ((HomePageFragment) currentFragment).updateList();
+        } else if (currentFragment instanceof MyActivityFragment) {
+            ((MyActivityFragment) currentFragment).updateList();
+        }
+//        currentFragment.updateList();
+    }
+
 
     public void setUserData(String userId, String userName) {
         this.userId = userId;
@@ -214,7 +238,13 @@ public class HomeActivity extends AppCompatActivity implements HomeCallback {
 
     @Override
     public void onRefresh() {
-//        currentFragment.updateList();
+        if (currentFragment instanceof SearchFragment) {
+            ((SearchFragment) currentFragment).updateList();
+        } else if (currentFragment instanceof HomePageFragment) {
+            ((HomePageFragment) currentFragment).updateList();
+        } else if (currentFragment instanceof MyActivityFragment) {
+            ((MyActivityFragment) currentFragment).updateList();
+        }
     }
 
 
