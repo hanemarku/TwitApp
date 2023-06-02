@@ -21,6 +21,7 @@ import com.example.twitapp.databinding.ActivityHomeBinding;
 import com.example.twitapp.fragments.HomePageFragment;
 import com.example.twitapp.fragments.MyActivityFragment;
 import com.example.twitapp.fragments.SearchFragment;
+import com.example.twitapp.listeners.HomeCallback;
 import com.example.twitapp.util.ImageUtil;
 import com.example.twitapp.util.models.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -32,7 +33,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements HomeCallback {
 
     private ImageView logo;
     private FirebaseFirestore firebaseDB;
@@ -46,6 +47,7 @@ public class HomeActivity extends AppCompatActivity {
     private EditText search;
     private CardView searchBar;
     private TextView titleBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,8 @@ public class HomeActivity extends AppCompatActivity {
 
         logo = findViewById(R.id.logo);
         titleBar = findViewById(R.id.titleBar);
+
+        search = findViewById(R.id.search);
 
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
@@ -109,15 +113,14 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
-        search = findViewById(R.id.search);
         binding.search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String query = v.getText().toString();
                     SearchFragment searchFragment = (SearchFragment) getSupportFragmentManager().findFragmentById(R.id.frame_layout);
                     if (searchFragment != null) {
-                        searchFragment.updateList(v.getText().toString());
-//                        searchFragment.populateTweetList("query");
+                        searchFragment.newHashtag(query);
                     }
                     return true;
                 }
@@ -203,5 +206,16 @@ public class HomeActivity extends AppCompatActivity {
         this.userId = userId;
         this.userName = userName;
     }
+
+    @Override
+    public void onUserUpdated() {
+        populate();
+    }
+
+    @Override
+    public void onRefresh() {
+//        currentFragment.updateList();
+    }
+
 
 }

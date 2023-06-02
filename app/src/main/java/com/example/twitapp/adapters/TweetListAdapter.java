@@ -18,6 +18,7 @@ import com.example.twitapp.util.models.Tweet;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.TweetViewHolder> {
     private String userId;
@@ -120,20 +121,23 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                 }
             });
 
-            boolean isLiked = tweet.getLikes().contains(userId);
-            like.setImageDrawable(ContextCompat.getDrawable(context, isLiked ? R.drawable.like : R.drawable.like_inactive));
 
-            List<String> userIds = tweet.getUserIds();
-            if (userIds != null && !userIds.isEmpty()) {
-                String firstUserId = userIds.get(0);
-                if (firstUserId.equals(userId)) {
-                    retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.original));
-                    retweet.setClickable(false);
-                } else if (userIds.contains(userId)) {
-                    retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.retweet));
-                } else {
-                    retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.retweet_inactive));
-                }
+////            boolean isLiked = new Random().nextBoolean();
+//            like.setImageDrawable(ContextCompat.getDrawable(context, isLiked ? R.drawable.like : R.drawable.like_inactive));
+
+            if (tweet.getLikes().contains(userId)) {
+                like.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.like));
+            } else {
+                like.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.like_inactive));
+            }
+
+            if (tweet.getUserIds().get(0).equals(userId)) {
+                retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.original));
+                retweet.setClickable(false);
+            } else if (tweet.getUserIds().contains(userId)) {
+                retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.retweet));
+            } else {
+                retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.retweet_inactive));
             }
         }
     }

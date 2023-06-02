@@ -3,8 +3,10 @@ package com.example.twitapp.fragments;
 import static com.example.twitapp.util.Constants.DATA_TWEETS;
 import static com.example.twitapp.util.Constants.DATA_TWEET_HASHTAGS;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,7 +22,9 @@ import android.widget.ImageView;
 import com.example.twitapp.R;
 import com.example.twitapp.adapters.TweetAdapter;
 import com.example.twitapp.adapters.TweetListAdapter;
+import com.example.twitapp.listeners.HomeCallback;
 import com.example.twitapp.listeners.TweetListener;
+import com.example.twitapp.listeners.TwitterListenerImpl;
 import com.example.twitapp.util.models.Tweet;
 import com.example.twitapp.util.models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,16 +46,15 @@ public class SearchFragment extends Fragment {
     private TweetListAdapter tweetsAdapter;
     private User currentUser;
     private FirebaseFirestore firebaseDB;
-    private String userId;
     private RecyclerView tweetList;
+
     private boolean hashtagFollowed = false;
     private ImageView followHashtag;
-    private TweetListener listener = null;
-
+    private TweetListener listener;
     private SwipeRefreshLayout swipeRefresh;
     private FirebaseAuth auth;
-
-    private List<Tweet> tweetListArray;
+    private String userId = null;
+    private HomeCallback callback = null;
 
 
 
@@ -66,15 +69,35 @@ public class SearchFragment extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+
         followHashtag = view.findViewById(R.id.followHashtag);
         firebaseDB = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
+        currentUser = new User();
         userId = auth.getCurrentUser().getUid();
         swipeRefresh = view.findViewById(R.id.swipeRefresh);
-
         tweetList = view.findViewById(R.id.tweetList);
 
-        tweetListArray = new ArrayList<>();
+
+        firebaseDB.collection("Users").document(userId).get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            currentUser = document.toObject(User.class);
+                            updateList();
+                        } else {
+                            Log.i("MySearchFragment", "No such document");
+                        }
+                    } else {
+                        Exception exception = task.getException();
+                        if (exception != null) {
+                            exception.printStackTrace();
+                        }
+                    }
+                });
+
+        listener = new TwitterListenerImpl(tweetList, currentUser, callback);
 
         tweetsAdapter = new TweetListAdapter(userId, new ArrayList<>());
         tweetsAdapter.setListener(listener);
@@ -87,14 +110,11 @@ public class SearchFragment extends Fragment {
             swipeRefresh.setRefreshing(false);
             updateList();
         });
-
-
-
-
     }
 
     public void newHashtag(String term) {
         currentHashtag = term;
+//        Log.i("SearchFragment", "New hashtag: " + currentHashtag);
         followHashtag.setVisibility(View.VISIBLE);
         updateList();
     }
@@ -103,26 +123,48 @@ public class SearchFragment extends Fragment {
 
     public void updateList() {
         tweetList.setVisibility(View.GONE);
-        firebaseDB.collection(DATA_TWEETS)
+        List<Tweet> tweets = new ArrayList<>();
+        FirebaseFirestore.getInstance()
+                .collection(DATA_TWEETS)
                 .whereArrayContains(DATA_TWEET_HASHTAGS, currentHashtag)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    tweetList.setVisibility(View.VISIBLE);
-                    ArrayList<Tweet> tweets = new ArrayList<>();
+                    Log.i("SearchFragment", "Tweets: " + DATA_TWEETS);
+                    Log.i("SearchFragment", "Tweets: " + currentHashtag + " " + querySnapshot.size());
+//                    ArrayList<Tweet> tweets = new ArrayList<>();
                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                         Tweet tweet = document.toObject(Tweet.class);
                         if (tweet != null) {
                             tweets.add(tweet);
                         }
                     }
-                    ArrayList<Tweet> sortedTweets = sortTweetsByTimestamp(tweets);
-                    tweetsAdapter.updateTweets(sortedTweets);
+
+                    Collections.sort(tweets, (o1, o2) -> o2.getTimestamp().compareTo(o1.getTimestamp()));
+
+                    if (tweetsAdapter != null) {
+                        tweetsAdapter.updateTweets(tweets);
+                    } else {
+                        tweetsAdapter = new TweetListAdapter(userId, (ArrayList<Tweet>) tweets);
+                        tweetList.setAdapter(tweetsAdapter);
+                    }
+
+
+//                    sortTweetsByTimestamp(tweets);
+                    tweetsAdapter.updateTweets(tweets);
+                    tweetList.setVisibility(View.VISIBLE);
+
+                    // Print the retrieved tweets
+                    for (Tweet tweet : tweets) {
+                        Log.d("FirebaseData", "Tweet: " + tweet.getText());
+                    }
+
                 })
                 .addOnFailureListener(e -> {
                     e.printStackTrace();
                     // Print the error message
                     Log.e("SearchFragment", "Error retrieving tweets: " + e.getMessage());
                 });
+        updateFollowDrawable();
     }
 
 
@@ -135,4 +177,28 @@ public class SearchFragment extends Fragment {
         });
         return tweets;
     }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof HomeCallback) {
+            callback = (HomeCallback) context;
+        } else {
+            throw new RuntimeException(context.toString() + " must implement HomeCallback");
+        }
+    }
+
+
+    private void updateFollowDrawable() {
+        hashtagFollowed = currentUser != null && currentUser.getFollowHashtags().contains(currentHashtag);
+        Context context = getContext();
+        if (context != null) {
+            if (hashtagFollowed) {
+                followHashtag.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.follow));
+            } else {
+                followHashtag.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.follow_inactive));
+            }
+        }
+    }
+
 }

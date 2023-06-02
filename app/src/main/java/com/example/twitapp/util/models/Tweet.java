@@ -54,6 +54,9 @@ public class Tweet {
     }
 
     public ArrayList<String> getUserIds() {
+        if (userIds == null) {
+            userIds = new ArrayList<>();
+        }
         return userIds;
     }
 
@@ -102,6 +105,9 @@ public class Tweet {
     }
 
     public ArrayList<String> getLikes() {
+        if (likes == null) {
+            likes = new ArrayList<>();
+        }
         return likes;
     }
 
