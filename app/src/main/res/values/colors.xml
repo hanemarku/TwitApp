@@ -15,4 +15,5 @@
     <color name="dark_grey">#777777</color>
     <color name="transparent_grey">#99cccccc</color>
     <color name="shadow_color">#cadddddd</color>
+    <color name="sky_blue">#00bfff</color>
 </resources>
