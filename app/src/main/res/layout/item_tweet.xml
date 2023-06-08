@@ -10,6 +10,7 @@
         android:id="@+id/tweetUsername"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:onClick="goToUserProfile"
         android:text="Username"
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toTopOf="parent"/>

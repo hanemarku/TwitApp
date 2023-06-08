@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.twitapp.R;
 import com.example.twitapp.adapters.TweetAdapter;
@@ -57,6 +58,7 @@ public class SearchFragment extends Fragment {
     private FirebaseAuth auth;
     private String userId = null;
     private HomeCallback callback = null;
+    private TextView username;
 
 
 
@@ -225,6 +227,19 @@ public class SearchFragment extends Fragment {
             }
         }
     }
+
+    // method when clicking to someone's profile
+//    public void onUserSelected(String userId) {
+//        if (callback != null) {
+////            callback.onUserSelected(userId);
+//        }
+//    }
+
+//    public void goToUserProfile(String userId) {
+//        if (callback != null) {
+//            callback.onUserSelected(userId);
+//        }
+//    }
 
     public void setUser(User user) {
         currentUser = user;

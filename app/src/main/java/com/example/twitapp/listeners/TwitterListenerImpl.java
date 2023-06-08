@@ -2,10 +2,12 @@ package com.example.twitapp.listeners;
 
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.util.Log;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.twitapp.activities.OtherUserProfileActivity;
 import com.example.twitapp.util.Constants;
 import com.example.twitapp.util.models.Tweet;
 import com.example.twitapp.util.models.User;
@@ -148,5 +150,14 @@ public class TwitterListenerImpl implements TweetListener {
     @Override
     public void setUser(User user) {
         this.user = user;
+    }
+
+    @Override
+    public void goToUserProfile(Object userId) {
+        if (userId != null) {
+            Intent intent = new Intent(tweetList.getContext(), OtherUserProfileActivity.class);
+            intent.putExtra(Constants.EXTRA_ID, userId.toString());
+            tweetList.getContext().startActivity(intent);
+        }
     }
 }

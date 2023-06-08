@@ -134,6 +134,14 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                     updateRetweetCount(retweetCount, tweet);
                 }
             });
+
+            username.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.goToUserProfile(tweet.getUserId());
+                }
+            });
+
+
         }
         }
         private void updateLikeButton(ImageView like,Context context,Tweet tweet) {

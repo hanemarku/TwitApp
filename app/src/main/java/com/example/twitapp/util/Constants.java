@@ -18,5 +18,9 @@ public class Constants {
     public static final String DATA_TWEETS_LIKES = "likes";
 
     public static final String DATA_TWEET_IMAGES = "TweetImages";
+
+    public static final String EXTRA_USER = "user";
+    public static final String EXTRA_ID = "id";
+
 }
 

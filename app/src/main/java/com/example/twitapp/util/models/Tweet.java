@@ -115,4 +115,7 @@ public class Tweet {
         this.likes = likes;
     }
 
+    public Object getUserId() {
+        return userIds.get(0);
+    }
 }

@@ -43,7 +43,7 @@ public class MyActivityFragment extends Fragment {
     private FirebaseFirestore firebaseDB;
     protected HomeCallback callback = null;
     protected String userId = null;
-;
+
 
 
     @Override
