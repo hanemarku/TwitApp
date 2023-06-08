@@ -46,7 +46,7 @@ public class OtherUserProfileActivity extends AppCompatActivity {
     private TweetListAdapter tweetsAdapter;
     private TweetListener listener;
     protected HomeCallback callback = null;
-    String userId = null;
+    String userId = null;;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
