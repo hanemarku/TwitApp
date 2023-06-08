@@ -135,24 +135,6 @@ public class TweetListAdapter extends RecyclerView.Adapter<TweetListAdapter.Twee
                 }
             });
         }
-
-//            retweet.setOnClickListener(v -> {
-//                if (listener != null) {
-//                    listener.onRetweet(tweet);
-//
-//                    if (!tweet.getUserIds().isEmpty() && tweet.getUserIds().get(0).equals(userId)) {
-//                        retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.original));
-//                        retweet.setClickable(false);
-//                    } else if (tweet.getUserIds().contains(userId)) {
-//                        tweet.getUserIds().add(userId);
-//                        retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.retweet));
-//                    } else {
-//                        tweet.getUserIds().remove(userId);
-//                        retweet.setImageDrawable(ContextCompat.getDrawable(context, R.drawable.retweet_inactive));
-//                    }
-//                    retweetCount.setText(String.valueOf(tweet.getUserIds().size() - 1));
-//                }
-//            });
         }
         private void updateLikeButton(ImageView like,Context context,Tweet tweet) {
             if (tweet.getLikes().contains(userId)) {

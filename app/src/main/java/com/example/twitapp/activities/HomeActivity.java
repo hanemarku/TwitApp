@@ -239,6 +239,8 @@ public class HomeActivity extends AppCompatActivity implements HomeCallback {
     @Override
     public void onRefresh() {
         if (currentFragment instanceof SearchFragment) {
+            ((SearchFragment) currentFragment).setUser(user);
+            ((SearchFragment) currentFragment).updateList();
             ((SearchFragment) currentFragment).updateList();
         } else if (currentFragment instanceof HomePageFragment) {
             ((HomePageFragment) currentFragment).updateList();

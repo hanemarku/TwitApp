@@ -226,6 +226,13 @@ public class SearchFragment extends Fragment {
         }
     }
 
+    public void setUser(User user) {
+        currentUser = user;
+        if (listener != null) {
+            listener.setUser(user);
+        }
+    }
+
 
     @Override
     public void onResume() {

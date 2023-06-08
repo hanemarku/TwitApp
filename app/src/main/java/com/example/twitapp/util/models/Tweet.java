@@ -114,4 +114,5 @@ public class Tweet {
     public void setLikes(ArrayList<String> likes) {
         this.likes = likes;
     }
+
 }

@@ -2,6 +2,7 @@ package com.example.twitapp.listeners;
 
 
 import android.app.AlertDialog;
+import android.util.Log;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -34,6 +35,27 @@ public class TwitterListenerImpl implements TweetListener {
         if (tweet != null) {
             String owner = tweet.getUserIds().get(0);
             if (!owner.equals(userId)) {
+                //find user with userId
+                firebaseDB.collection(Constants.DATA_USERS)
+                        .document(userId)
+                        .get()
+                        .addOnSuccessListener(documentSnapshot -> {
+                            user = documentSnapshot.toObject(User.class);
+
+                        })
+                        .addOnFailureListener(e -> Log.e("ERROR", e.getLocalizedMessage()));
+                Log.i("INFO", "user: " + user + " owner: " + owner);
+                Log.i("INFO", "user.getFollowUsers(): " + user.getFollowUsers());
+                //print in log all user.getFollowUsers()
+                if (user.getFollowUsers() != null) {
+                    for (String followedUser : user.getFollowUsers()) {
+                        Log.i("INFO", "followedUser: " + followedUser);
+                    }
+                }
+                // if user.getFollowUsers() is null make the list empty
+                if (user.getFollowUsers() == null) {
+                    user.setFollowUsers(new ArrayList<>());
+                }
                 if (user.getFollowUsers().contains(owner)) {
                     new AlertDialog.Builder(tweetList.getContext())
                             .setTitle("Unfollow " + tweet.getUsername() + "?")
@@ -121,5 +143,10 @@ public class TwitterListenerImpl implements TweetListener {
                     })
                     .addOnFailureListener(e -> tweetList.setClickable(true));
         }
+    }
+
+    @Override
+    public void setUser(User user) {
+        this.user = user;
     }
 }
