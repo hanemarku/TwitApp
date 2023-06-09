@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.twitapp.R;
+
+import com.example.twitapp.adapters.MyAdapter;
 import com.example.twitapp.adapters.TweetAdapter;
 import com.example.twitapp.adapters.TweetListAdapter;
 import com.example.twitapp.listeners.HomeCallback;
@@ -34,6 +36,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 
@@ -59,7 +62,15 @@ public class SearchFragment extends Fragment {
     private String userId = null;
     private HomeCallback callback = null;
     private TextView username;
+    private ArrayList<String> hashtagsList;
 
+    private RecyclerView hashtagTrendingList;
+//    private HashtagListAdapter hashtagAdapter;
+
+    private RecyclerView.Adapter adapter;
+    private RecyclerView.LayoutManager layoutManager;
+    private ArrayList<String> stringList;
+    private SwipeRefreshLayout swipeRefreshLayout1;
 
 
     @Override
@@ -81,6 +92,8 @@ public class SearchFragment extends Fragment {
         userId = auth.getCurrentUser().getUid();
         swipeRefresh = view.findViewById(R.id.swipeRefresh);
         tweetList = view.findViewById(R.id.tweetList);
+        hashtagTrendingList = view.findViewById(R.id.hashtagTrendingList);
+        swipeRefreshLayout1 = view.findViewById(R.id.swipeRefresh1);
 
 
         firebaseDB.collection("Users").document(userId).get()
@@ -101,8 +114,19 @@ public class SearchFragment extends Fragment {
                     }
                 });
 
-        listener = new TwitterListenerImpl(tweetList, currentUser, callback);
 
+        layoutManager = new LinearLayoutManager(getActivity());
+        hashtagTrendingList.setLayoutManager(layoutManager);
+
+        hashtagsList = new ArrayList<>();
+//        stringList.add("String 1");
+//        stringList.add("String 2");
+//        stringList.add("String 3");
+
+        adapter = new MyAdapter(hashtagsList);
+        hashtagTrendingList.setAdapter(adapter);
+        fetchTrendingHashtags();
+        listener = new TwitterListenerImpl(tweetList, currentUser, callback);
         tweetsAdapter = new TweetListAdapter(userId, new ArrayList<>());
         tweetsAdapter.setListener(listener);
 
@@ -110,10 +134,12 @@ public class SearchFragment extends Fragment {
         tweetList.setAdapter(tweetsAdapter);
         tweetList.addItemDecoration(new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL));
 
+
         swipeRefresh.setOnRefreshListener(() -> {
             swipeRefresh.setRefreshing(false);
             updateList();
         });
+
 
         view.findViewById(R.id.followHashtag).setOnClickListener(v -> {
             v.setClickable(false);
@@ -140,9 +166,12 @@ public class SearchFragment extends Fragment {
     }
 
     public void newHashtag(String term) {
+        Log.i("SearchFragment", "New hashtag: " + term);
         currentHashtag = term;
-//        Log.i("SearchFragment", "New hashtag: " + currentHashtag);
         followHashtag.setVisibility(View.VISIBLE);
+        // make trending hashtags invisible
+        hashtagTrendingList.setVisibility(View.GONE);
+        swipeRefreshLayout1.setVisibility(View.GONE);
         updateList();
     }
 
@@ -193,6 +222,38 @@ public class SearchFragment extends Fragment {
                 });
         updateFollowDrawable();
     }
+
+    private void fetchTrendingHashtags() {
+        firebaseDB.collection(DATA_USERS)
+                .orderBy(DATA_USER_HASHTAGS, Query.Direction.DESCENDING)
+                .limit(3)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    ArrayList<String> hashtags = new ArrayList<>();
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        List<String> userHashtags = document.toObject(User.class).getFollowHashtags();
+
+                            hashtags.addAll(userHashtags);
+
+                    }
+                    hashtagsList.clear();
+                    hashtagsList.addAll(hashtags);
+                    adapter.notifyDataSetChanged();
+
+                    for (String hashtag : hashtags) {
+                        Log.d("FirebaseData", "Hashtag: " + hashtag);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    e.printStackTrace();
+                });
+
+//        adapter = new MyAdapter(hashtagsList);
+//        hashtagTrendingList.setAdapter(adapter);
+        hashtagTrendingList.setVisibility(View.VISIBLE);
+    }
+
+
 
 
     private ArrayList<Tweet> sortTweetsByTimestamp(ArrayList<Tweet> tweets) {
@@ -253,5 +314,6 @@ public class SearchFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateList();
+//        fetchTrendingHashtags();
     }
 }

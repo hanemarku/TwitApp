@@ -73,7 +73,7 @@ public class HomeActivity extends AppCompatActivity implements HomeCallback {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        replaceFragment(new SearchFragment());
+        replaceFragment(new HomePageFragment());
 
 
         homeFragment = new HomePageFragment();
@@ -86,12 +86,18 @@ public class HomeActivity extends AppCompatActivity implements HomeCallback {
             switch (item.getItemId()){
                 case R.id.tabHome:
                     replaceFragment(new HomePageFragment());
+                    binding.searchBar.setVisibility(View.GONE);
+                    binding.titleBar.setText("Home");
                     break;
                 case R.id.tabSearch:
                     replaceFragment(new SearchFragment());
+                    binding.searchBar.setVisibility(View.VISIBLE);
+                    binding.titleBar.setText("Search");
                     break;
                 case R.id.tabActivity:
                     replaceFragment(new MyActivityFragment());
+                    binding.searchBar.setVisibility(View.GONE);
+                    binding.titleBar.setText("Activity");
                     break;
             }
 
