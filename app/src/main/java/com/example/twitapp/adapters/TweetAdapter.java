@@ -37,7 +37,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
 
         holder.usernameTextView.setText(tweet.getUsername());
         holder.tweetTextView.setText(tweet.getText());
-        // Set other views as needed (e.g., image, timestamp, etc.)
     }
 
     @Override
@@ -48,7 +47,6 @@ public class TweetAdapter extends RecyclerView.Adapter<TweetAdapter.ViewHolder> 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView usernameTextView;
         public TextView tweetTextView;
-        // Add other views as needed (e.g., image, timestamp, etc.)
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

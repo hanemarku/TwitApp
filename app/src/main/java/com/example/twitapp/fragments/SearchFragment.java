@@ -24,8 +24,7 @@ import android.widget.TextView;
 
 import com.example.twitapp.R;
 
-import com.example.twitapp.adapters.MyAdapter;
-import com.example.twitapp.adapters.TweetAdapter;
+import com.example.twitapp.adapters.TrendingHashtagListAdapter;
 import com.example.twitapp.adapters.TweetListAdapter;
 import com.example.twitapp.listeners.HomeCallback;
 import com.example.twitapp.listeners.TweetListener;
@@ -33,7 +32,6 @@ import com.example.twitapp.listeners.TwitterListenerImpl;
 import com.example.twitapp.util.models.Tweet;
 import com.example.twitapp.util.models.User;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -123,7 +121,7 @@ public class SearchFragment extends Fragment {
 //        stringList.add("String 2");
 //        stringList.add("String 3");
 
-        adapter = new MyAdapter(hashtagsList);
+        adapter = new TrendingHashtagListAdapter(hashtagsList);
         hashtagTrendingList.setAdapter(adapter);
         fetchTrendingHashtags();
         listener = new TwitterListenerImpl(tweetList, currentUser, callback);

@@ -5,15 +5,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.twitapp.R;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
+public class TrendingHashtagListAdapter extends RecyclerView.Adapter<TrendingHashtagListAdapter.ViewHolder> {
     private ArrayList<String> stringList;
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -25,7 +23,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    public MyAdapter(ArrayList<String> list) {
+    public TrendingHashtagListAdapter(ArrayList<String> list) {
         stringList = list;
     }
 
